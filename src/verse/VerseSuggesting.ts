@@ -128,25 +128,25 @@ export class VerseSuggesting
       this.settings?.showVerseTranslation &&
       this.settings?.enableHyperlinking
     ) {
-      verseLink = ` [${
+      verseLink = `> —**[${
         this.bibleProvider.BibleReferenceHead
-      } - ${this.bibleVersion.toUpperCase()}](${
+      } (${this.bibleVersion.toUpperCase()})](${
         this.bibleProvider.VerseLinkURL
-      })`
+      })**`
     } else if (
       this.settings?.showVerseTranslation &&
       !this.settings?.enableHyperlinking
     ) {
-      verseLink = ` ${
+      verseLink = `> —**${
         this.bibleProvider.BibleReferenceHead
-      } - ${this.bibleVersion.toUpperCase()}`
+      } (${this.bibleVersion.toUpperCase()})**`
     } else if (
       !this.settings?.showVerseTranslation &&
       this.settings?.enableHyperlinking
     ) {
-      verseLink = ` [${this.bibleProvider.BibleReferenceHead}](${this.bibleProvider.VerseLinkURL})`
+      verseLink = `> —**[${this.bibleProvider.BibleReferenceHead}](${this.bibleProvider.VerseLinkURL})**`
     } else {
-      verseLink = ` ${this.bibleProvider.BibleReferenceHead}`
+      verseLink = `> —**${this.bibleProvider.BibleReferenceHead}**`
     }
     return verseLink
   }
