@@ -2,6 +2,8 @@ import { IVerse } from '../interfaces/IVerse'
 import { Notice } from 'obsidian'
 import { EventStats } from './EventStats'
 import { IBibleVersion } from '../interfaces/IBibleVersion'
+import fs from 'fs'
+import { DOMParser } from '@xmldom/xmldom'
 
 export abstract class BaseBibleAPIProvider {
   protected _versionKey: string // the version selected, for example kjv
@@ -108,6 +110,42 @@ export abstract class BaseBibleAPIProvider {
   ): Promise<IVerse[]> {
     if (!this._versionKey && versionName) {
       throw new Error('version (language) not set yet')
+    }
+
+    console.log(this._versionKey)
+    if (this._versionKey === 'niv') {
+      console.log('here')
+      const xmlFile =
+        '/Users/sunnyliu/Repos/obsidian-plugins/.obsidian/plugins/obsidian-bible-reference/src/NIV.xml'
+      const xmlString = fs.readFileSync(xmlFile, 'utf-8')
+      const doc = new DOMParser().parseFromString(xmlString, 'text/xml')
+      const bookEl = Array.from(doc.getElementsByTagName('b')).find(
+        (b) => b.getAttribute('n') === bookName
+      )
+
+      const chapterEl = bookEl?.getElementsByTagName('c')[0]
+      const data = []
+
+      if (chapterEl) {
+        verse.forEach((verseNum) => {
+          const verseEl = Array.from(chapterEl.getElementsByTagName('v')).find(
+            (v) => v.getAttribute('n') === verseNum.toString()
+          )
+          data.push({
+            pk: 1,
+            verse: verseNum,
+            text: verseEl?.textContent?.trim() || 'Verse not found',
+          })
+        })
+        console.log(data)
+        return this.formatBibleVerses(
+          data,
+          bookName,
+          chapter,
+          verse,
+          versionName || this._versionKey
+        )
+      }
     }
     const url = this.buildRequestURL(
       bookName,
