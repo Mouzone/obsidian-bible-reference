@@ -123,21 +123,35 @@ export abstract class BaseBibleAPIProvider {
         (b) => b.getAttribute('n') === bookName
       )
 
-      const chapterEl = bookEl?.getElementsByTagName('c')[0]
-      const data = []
+      const chapterEl = bookEl?.getElementsByTagName('c')[chapter - 1]
 
       if (chapterEl) {
-        verse.forEach((verseNum) => {
-          const verseEl = Array.from(chapterEl.getElementsByTagName('v')).find(
-            (v) => v.getAttribute('n') === verseNum.toString()
+        const allVerses = Array.from(chapterEl.getElementsByTagName('v'))
+
+        let selectedVerses = []
+
+        if (verse.length === 0) {
+          selectedVerses = allVerses
+        } else if (verse.length === 1) {
+          selectedVerses = allVerses.filter(
+            (v) => v.getAttribute('n') === verse[0].toString()
           )
-          data.push({
-            pk: 1,
-            verse: verseNum,
-            text: verseEl?.textContent?.trim() || 'Verse not found',
+        } else if (verse.length === 2) {
+          const [start, end] = [verse[0], verse[1]]
+          selectedVerses = allVerses.filter((v) => {
+            const n = parseInt(v.getAttribute('n'))
+            return n >= start && n <= end
           })
-        })
+        }
+
+        const data = selectedVerses.map((v) => ({
+          pk: 1,
+          verse: parseInt(v.getAttribute('n')),
+          text: v.textContent?.trim() || 'Verse not found',
+        }))
+
         console.log(data)
+
         return this.formatBibleVerses(
           data,
           bookName,
@@ -164,6 +178,7 @@ export abstract class BaseBibleAPIProvider {
         cache: 'force-cache',
       })
       const data = await response.json()
+      console.log(data)
       return this.formatBibleVerses(
         data,
         bookName,
