@@ -111,12 +111,16 @@ export abstract class BaseBibleAPIProvider {
     if (!this._versionKey && versionName) {
       throw new Error('version (language) not set yet')
     }
-
+    const url = this.buildRequestURL(
+      bookName,
+      chapter,
+      verse,
+      versionName || this._versionKey
+    )
     console.log(this._versionKey)
     if (this._versionKey === 'niv') {
       console.log('here')
-      const xmlFile =
-        '/Users/sunnyliu/Repos/obsidian-plugins/.obsidian/plugins/obsidian-bible-reference/src/NIV.xml'
+      const xmlFile = '/Users/sunnyliu/Documents/XML\ Bibles/NIV.xml'
       const xmlString = fs.readFileSync(xmlFile, 'utf-8')
       const doc = new DOMParser().parseFromString(xmlString, 'text/xml')
       const bookEl = Array.from(doc.getElementsByTagName('b')).find(
@@ -161,13 +165,6 @@ export abstract class BaseBibleAPIProvider {
         )
       }
     }
-    const url = this.buildRequestURL(
-      bookName,
-      chapter,
-      verse,
-      versionName || this._versionKey
-    )
-    console.debug(url, 'url to query')
     try {
       const response = await fetch(url, {
         method: 'get',
