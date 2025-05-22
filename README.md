@@ -1,4 +1,5 @@
-Fork of [obsidian-bible-reference](https://github.com/tim-hub/obsidian-bible-reference) with minor stylistic improvements for rendering bottom reference
+Fork of [obsidian-bible-reference](https://github.com/tim-hub/obsidian-bible-reference) with minor stylistic improvements for rendering bottom reference.
+Able to load local copies of bible allowing for offline use
 
 # Todo
 - Add a new class for adding local bible xml versions to selections
