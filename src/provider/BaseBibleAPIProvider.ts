@@ -120,7 +120,7 @@ export abstract class BaseBibleAPIProvider {
     console.log(this._versionKey)
     if (this._versionKey === 'niv') {
       console.log('here')
-      const xmlFile = '/Users/sunnyliu/Documents/XML\ Bibles/NIV.xml'
+      const xmlFile = '/Users/sunnyliu/Library/Mobile Documents/com~apple~CloudDocs/XML Bibles/NIV.xml'
       const xmlString = fs.readFileSync(xmlFile, 'utf-8')
       const doc = new DOMParser().parseFromString(xmlString, 'text/xml')
       const bookEl = Array.from(doc.getElementsByTagName('b')).find(
